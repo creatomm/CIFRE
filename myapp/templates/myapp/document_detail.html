@@ -1,0 +1,20 @@
+{% extends 'base_generic.html' %}
+
+{% block title %}{{ document.title }}{% endblock %}
+
+{% block content %}
+  <h1>{{ document.title }}</h1>
+  <div class="card">
+      <div class="card-body">
+          <h5 class="card-title">Contenu</h5>
+          <p class="card-text">{{ document.content }}</p>
+          <h5 class="card-title">Résumé supervisé</h5>
+          <p class="card-text">{{ document.summary_supervised }}</p>
+          <h5 class="card-title">Résumé non supervisé</h5>
+          <p class="card-text">{{ document.summary_unsupervised }}</p>
+          <h5 class="card-title">Résumé T5</h5>
+          <p class="card-text">{{ document.summary_t5 }}</p>
+      </div>
+  </div>
+  <a href="{% url 'document_list' %}" class="btn btn-secondary my-4">Retour à la liste</a>
+{% endblock %}
