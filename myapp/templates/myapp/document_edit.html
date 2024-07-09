@@ -1,41 +1,49 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Nouveau Document</title>
+    <!-- Titre de la page pour indiquer la modification du document -->
+    <title>Modifier le Document</title>
+    
+    <!-- Inclusion de Bootstrap pour le style -->
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- Inclusion de jQuery, Popper.js et Bootstrap JS pour les fonctionnalités dynamiques -->
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </head>
 <body>
+    <!-- Barre de navigation -->
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
         <a class="navbar-brand" href="#">Mon Application</a>
         <div class="collapse navbar-collapse">
             <ul class="navbar-nav mr-auto">
                 <li class="nav-item active">
+                    <!-- Lien vers la liste des documents -->
                     <a class="nav-link" href="{% url 'document_list' %}">Accueil</a>
                 </li>
                 <li class="nav-item">
+                    <!-- Lien pour ajouter un nouveau document -->
                     <a class="nav-link" href="{% url 'document_new' %}">Ajouter un nouveau document</a>
                 </li>
             </ul>
         </div>
     </nav>
 
+    <!-- Contenu principal -->
     <div class="container mt-4">
-        <h1 class="my-4">Nouveau Document</h1>
-        <form method="post" class="form">
+        <!-- Titre indiquant la modification du document -->
+        <h1 class="my-4">Modifier le Document</h1>
+        
+        <!-- Formulaire pour modifier le document -->
+        <form method="post">
             {% csrf_token %}
-            <div class="form-group">
-                {{ form.title.label_tag }}
-                {{ form.title }}
-            </div>
-            <div class="form-group">
-                {{ form.content.label_tag }}
-                {{ form.content }}
-            </div>
-            <button type="submit" class="btn btn-primary">Enregistrer</button>
+            <!-- Affichage du formulaire avec les champs préremplis -->
+            {{ form.as_p }}
+            <!-- Bouton pour enregistrer les modifications -->
+            <button type="submit" class="btn btn-primary">Enregistrer les modifications</button>
         </form>
     </div>
 </body>
 </html>
+

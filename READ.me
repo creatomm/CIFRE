@@ -1,0 +1,155 @@
+# Résumé de Texte avec IA - Projet Django
+
+## Objectif
+
+Le but de ce projet est de développer une application Django permettant de générer des résumés de textes en utilisant trois approches différentes : supervisée, non supervisée, et une approche basée sur un modèle T5 et Sumy
+
+## Description des Approches
+
+1. **Résumé supervisé** : Utilisation du modèle BART pour générer des résumés.
+2. **Résumé non supervisé** : Utilisation de l'algorithme TextRank et TF-IDF pour extraire les phrases les plus pertinentes.
+3. **Résumé T5** : Utilisation du modèle T5 pour générer des résumés.
+4. **Résumé Sumy** : Utilisation de la bibliothèque Sumy pour générer des résumés basés sur la méthode LSA (Latent Semantic Analysis).
+
+## Étapes et Algorithmes
+
+### 1. Prétraitement du Texte (Texte Manning)
+
+**Étapes :**
+- **Tokenisation** : Séparer le texte en mots ou phrases.
+- **Vectorisation** : Convertir les mots ou phrases en vecteurs numériques.
+
+**Algorithme utilisé :**
+- `TfidfVectorizer` de la bibliothèque `sklearn` pour transformer le texte en une matrice TF-IDF.
+
+```python
+def preprocess_text(document):
+    vectorizer = TfidfVectorizer(stop_words='english')
+    tfidf_matrix = vectorizer.fit_transform([document])
+    return tfidf_matrix, vectorizer
+```
+
+### 2. Machine Learning Supervisé
+
+**Étapes :**
+- **Modèle utilisé** : BART (Bidirectional and Auto-Regressive Transformers) de `transformers`.
+- **Résumé généré** : Le modèle BART est entraîné pour générer des résumés à partir du texte fourni.
+
+**Algorithme utilisé :**
+- `facebook/bart-large-cnn` de la bibliothèque `transformers`.
+
+```python
+def generate_summary_supervised(text):
+    summarizer = pipeline("summarization", model="facebook/bart-large-cnn")
+    summary = summarizer(text, max_length=150, min_length=40, do_sample=False)
+    return summary[0]['summary_text']
+```
+
+### 3. Machine Learning Non Supervisé
+
+**Étapes :**
+- **Tokenisation**: Diviser le texte en phrases.
+- **TF-IDF** : Calculer la matrice TF-IDF pour les phrases.
+- **Similarité Cosinus** : Calculer la similarité entre les phrases.
+- **TextRank** : Utiliser un algorithme de PageRank pour identifier les phrases les plus importantes.
+
+**Algorithme utilisé :**
+- `TfidfVectorizer` pour la vectorisation.
+- `cosine_similarity` pour la similarité entre phrases.
+- `pagerank` de `networkx` pour le score des phrases.
+
+```python
+def generate_summary_unsupervised(text, top_n=5):
+    sentences = sent_tokenize(text)
+    vectorizer = TfidfVectorizer(stop_words='english')
+    tfidf_matrix = vectorizer.fit_transform(sentences)
+    similarity_matrix = cosine_similarity(tfidf_matrix)
+    nx_graph = nx.from_numpy_array(similarity_matrix)
+    scores = nx.pagerank(nx_graph)
+    ranked_sentences = sorted(((scores[i], s) for i, s in enumerate(sentences)), reverse=True)
+    top_sentences = [ranked_sentences[i][1] for i in range(top_n)]
+    summary = ' '.join(top_sentences)
+    return summary
+``` 
+
+### 4. Résumé avec T5
+
+**Étapes :**
+- **Modèle utilisé** : T5 (Text-To-Text Transfer Transformer).
+- **Résumé généré** : Le modèle T5 est entraîné pour générer des résumés à partir du texte fourni.
+
+**Algorithme utilisé :**
+- `t5-small` de la bibliothèque `transformers`.
+
+```python
+def generate_summary_t5(text):
+    t5_tokenizer = T5Tokenizer.from_pretrained('t5-small')
+    t5_model = T5ForConditionalGeneration.from_pretrained('t5-small')
+    inputs = t5_tokenizer.encode("summarize: " + text, return_tensors="pt", max_length=512, truncation=True)
+    outputs = t5_model.generate(inputs, max_length=150, min_length=40, length_penalty=2.0, num_beams=4, early_stopping=True)
+    return t5_tokenizer.decode(outputs[0], skip_special_tokens=True)
+```
+
+### 5. Résumé avec Sumy
+
+**Étapes :**
+- **Tokenisation** : Diviser le texte en phrases.
+- **LSA** : Utiliser l'algorithme LSA (Latent Semantic Analysis) pour résumer le texte.
+
+**Algorithme utilisé :**
+- `LsaSummarizer` de la bibliothèque `sumy`.
+
+```python
+def generate_summary_sumy(text, sentence_count=3):
+    parser = PlaintextParser.from_string(text, Tokenizer("english"))
+    summarizer = LsaSummarizer()
+    summary = summarizer(parser.document, sentence_count)
+    return " ".join(str(sentence) for sentence in summary)
+```
+
+### Conclusion
+
+Chaque méthode de résumé a ses propres avantages et inconvénients. Le résumé supervisé avec BART et T5 permet de générer des résumés plus précis et cohérents, tandis que l'approche non supervisée avec TextRank offre une méthode rapide et efficace sans nécessiter de données d'entraînement. Sumy, avec LSA, fournit une autre approche non supervisée basée sur l'analyse sémantique latente.
+
+
+Exécution du Projet
+Pour exécuter ce projet, suivez les étapes ci-dessous :
+
+Cloner le dépôt :
+git clone <URL_DU_DÉPÔT>
+cd <NOM_DU_DÉPÔT>
+
+Créer et activer un environnement virtuel :
+python3 -m venv myenv
+source myenv/bin/activate  # Sur Windows utilisez `myenv\Scripts\activate`
+
+Installer les dépendances :
+pip install -r requirements.txt
+
+Appliquer les migrations :
+python manage.py migrate
+
+Démarrer le serveur Django :
+python manage.py runserver
+
+Accéder à l'application :
+Ouvrez votre navigateur et allez à l'adresse http://127.0.0.1:8000/ pour accéder à l'application.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

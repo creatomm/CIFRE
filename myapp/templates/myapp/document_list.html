@@ -1,37 +1,63 @@
 <!DOCTYPE html>
 <html>
 <head>
+    <!-- Titre de la page pour indiquer la liste des documents -->
     <title>Liste des Documents</title>
+    
+    <!-- Inclusion de Bootstrap pour le style -->
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- Inclusion de jQuery, Popper.js et Bootstrap JS pour les fonctionnalités dynamiques -->
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </head>
 <body>
+    <!-- Barre de navigation -->
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
         <a class="navbar-brand" href="#">Mon Application</a>
         <div class="collapse navbar-collapse">
             <ul class="navbar-nav mr-auto">
                 <li class="nav-item active">
+                    <!-- Lien vers la liste des documents -->
                     <a class="nav-link" href="{% url 'document_list' %}">Accueil</a>
                 </li>
                 <li class="nav-item">
+                    <!-- Lien pour ajouter un nouveau document -->
                     <a class="nav-link" href="{% url 'document_new' %}">Ajouter un nouveau document</a>
                 </li>
             </ul>
         </div>
     </nav>
 
+    <!-- Contenu principal -->
     <div class="container mt-4">
+        <!-- Titre de la page indiquant la liste des documents -->
         <h1 class="my-4">Liste des Documents</h1>
+        
+        <!-- Liste des documents -->
         <ul class="list-group">
+            <!-- Boucle sur les documents pour les afficher -->
             {% for document in documents %}
-                <li class="list-group-item">
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    <!-- Lien vers le détail du document -->
                     <a href="{% url 'document_detail' document.pk %}">{{ document.title }}</a>
+                    <span>
+                        <!-- Lien pour modifier le document -->
+                        <a href="{% url 'document_edit' document.pk %}" class="btn btn-sm btn-primary">Modifier</a>
+                        <!-- Formulaire pour supprimer le document -->
+                        <form action="{% url 'document_delete' document.pk %}" method="post" style="display: inline;">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-sm btn-danger">Supprimer</button>
+                        </form>
+                    </span>
                 </li>
             {% endfor %}
         </ul>
+        
+        <!-- Bouton pour ajouter un nouveau document -->
         <a href="{% url 'document_new' %}" class="btn btn-primary my-4">Ajouter un nouveau document</a>
     </div>
 </body>
 </html>
+

@@ -1,20 +1,65 @@
-{% extends 'base_generic.html' %}
+<!DOCTYPE html>
+<html>
+<head>
+    <!-- Titre de la page basé sur le titre du document -->
+    <title>{{ document.title }}</title>
+    
+    <!-- Inclusion de Bootstrap pour le style -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- Inclusion de jQuery, Popper.js et Bootstrap JS pour les fonctionnalités dynamiques -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</head>
+<body>
+    <!-- Barre de navigation -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <a class="navbar-brand" href="#">Mon Application</a>
+        <div class="collapse navbar-collapse">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item active">
+                    <!-- Lien vers la liste des documents -->
+                    <a class="nav-link" href="{% url 'document_list' %}">Accueil</a>
+                </li>
+                <li class="nav-item">
+                    <!-- Lien pour ajouter un nouveau document -->
+                    <a class="nav-link" href="{% url 'document_new' %}">Ajouter un nouveau document</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
 
-{% block title %}{{ document.title }}{% endblock %}
+    <!-- Contenu principal -->
+    <div class="container mt-4">
+        <!-- Titre du document -->
+        <h1 class="my-4">{{ document.title }}</h1>
+        <div class="card">
+            <div class="card-body">
+                <!-- Affichage du contenu du document -->
+                <h5 class="card-title">Contenu</h5>
+                <p class="card-text">{{ document.content }}</p>
+                
+                <!-- Affichage du résumé supervisé -->
+                <h5 class="card-title">Résumé supervisé</h5>
+                <p class="card-text">{{ document.summary_supervised }}</p>
+                
+                <!-- Affichage du résumé non supervisé -->
+                <h5 class="card-title">Résumé non supervisé</h5>
+                <p class="card-text">{{ document.summary_unsupervised }}</p>
+                
+                <!-- Affichage du résumé T5 -->
+                <h5 class="card-title">Résumé T5</h5>
+                <p class="card-text">{{ document.summary_t5 }}</p>
+                
+                <!-- Affichage du résumé Sumy -->
+                <h5 class="card-title">Résumé Sumy</h5>
+                <p class="card-text">{{ document.summary_sumy }}</p>
+            </div>
+        </div>
+        <!-- Bouton pour retourner à la liste des documents -->
+        <a href="{% url 'document_list' %}" class="btn btn-secondary my-4">Retour à la liste</a>
+    </div>
+</body>
+</html>
 
-{% block content %}
-  <h1>{{ document.title }}</h1>
-  <div class="card">
-      <div class="card-body">
-          <h5 class="card-title">Contenu</h5>
-          <p class="card-text">{{ document.content }}</p>
-          <h5 class="card-title">Résumé supervisé</h5>
-          <p class="card-text">{{ document.summary_supervised }}</p>
-          <h5 class="card-title">Résumé non supervisé</h5>
-          <p class="card-text">{{ document.summary_unsupervised }}</p>
-          <h5 class="card-title">Résumé T5</h5>
-          <p class="card-text">{{ document.summary_t5 }}</p>
-      </div>
-  </div>
-  <a href="{% url 'document_list' %}" class="btn btn-secondary my-4">Retour à la liste</a>
-{% endblock %}
