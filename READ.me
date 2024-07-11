@@ -1,5 +1,27 @@
 # Résumé de Texte avec IA - Projet Django
 
+Exécution du Projet
+Pour exécuter ce projet, suivez les étapes ci-dessous :
+
+Après avoir téléchargé le fichier ZIP, vous dans la zone dans laquelle vous l'avez enregistré.
+
+Créer et activer un environnement virtuel via l'invite de commande : 
+python3 -m venv myenv #installer la dernière version de python si ce n'est pas déjà fait, la version 3.11.2 est suffisante
+source myenv/bin/activate  # Sur Windows utilisez `myenv\Scripts\activate`
+
+Installer les dépendances :
+pip install -r requirements.txt
+
+Appliquer les migrations :
+python manage.py migrate
+
+Démarrer le serveur Django :
+python manage.py runserver
+
+Accéder à l'application :
+Ouvrez votre navigateur et allez à l'adresse http://127.0.0.1:8000/ pour accéder à l'application.
+
+
 ## Objectif
 
 Le but de ce projet est de développer une application Django permettant de générer des résumés de textes en utilisant trois approches différentes : supervisée, non supervisée, et une approche basée sur un modèle T5 et Sumy
@@ -45,6 +67,11 @@ def generate_summary_supervised(text):
     return summary[0]['summary_text']
 ```
 
+**Pourquoi BART ? :**
+
+J'ai choisi BART (Bidirectional and Auto-Regressive Transformers) pour le résumé supervisé en raison de ses caractéristiques et de ses performances spécifiques dans les tâches de génération de texte et de résumé.En particulier, BART est pré-entraîné sur une tâche de débruitage de texte, ce qui le rend très efficace pour comprendre et générer du texte en langage naturel. De plus, il a été fine-tuné spécifiquement pour des tâches de résumé, ce qui lui donne un avantage en termes de performance par rapport à (par exemple) GPT, qui est plus généraliste.
+
+
 ### 3. Machine Learning Non Supervisé
 
 **Étapes :**
@@ -71,8 +98,12 @@ def generate_summary_unsupervised(text, top_n=5):
     summary = ' '.join(top_sentences)
     return summary
 ``` 
+**Pourquoi TF-IDF et TextRank ? :**
 
-### 4. Résumé avec T5
+J'ai choisi d'utiliser TF-IDF (Term Frequency-Inverse Document Frequency) et TextRank pour le résumé non supervisé en raison de leur efficacité et simplicité dans l'extraction des informations importantes des textes sans nécessiter de données annotées. TF-IDF est une méthode éprouvée et efficace pour convertir le texte en vecteurs numériques en pondérant l'importance des mots dans un document par rapport à un corpus. C'est un algorithme relativement simple à implémenter et à comprendre, ce qui le rend idéal pour de nombreuses applications de traitement du langage naturel. TextRank utilise une variante de l'algorithme PageRank, initialement développé pour classer les pages web, ce qui en fait un outil puissant pour évaluer l'importance des phrases dans un texte. Contrairement aux méthodes supervisées, TextRank ne nécessite pas de corpus de textes annotés pour fonctionner, ce qui en fait une solution idéale lorsque les données annotées sont rares ou inexistantes. La similarité cosinus est une mesure efficace pour évaluer la similarité entre deux vecteurs (phrases), ce qui est crucial pour identifier les phrases les plus représentatives du texte. En utilisant ces techniques, nous pouvons générer des résumés non supervisés qui sont à la fois pertinents et informatifs, tout en étant relativement faciles à mettre en œuvre.
+
+
+### 4. Résumé avec T5 pour une comparaison avec le machine learning supervisé
 
 **Étapes :**
 - **Modèle utilisé** : T5 (Text-To-Text Transfer Transformer).
@@ -90,7 +121,7 @@ def generate_summary_t5(text):
     return t5_tokenizer.decode(outputs[0], skip_special_tokens=True)
 ```
 
-### 5. Résumé avec Sumy
+### 5. Résumé avec Sumy pour une comparaison avec le machine learning non supervisé
 
 **Étapes :**
 - **Tokenisation** : Diviser le texte en phrases.
@@ -110,30 +141,6 @@ def generate_summary_sumy(text, sentence_count=3):
 ### Conclusion
 
 Chaque méthode de résumé a ses propres avantages et inconvénients. Le résumé supervisé avec BART et T5 permet de générer des résumés plus précis et cohérents, tandis que l'approche non supervisée avec TextRank offre une méthode rapide et efficace sans nécessiter de données d'entraînement. Sumy, avec LSA, fournit une autre approche non supervisée basée sur l'analyse sémantique latente.
-
-
-Exécution du Projet
-Pour exécuter ce projet, suivez les étapes ci-dessous :
-
-Cloner le dépôt :
-git clone <URL_DU_DÉPÔT>
-cd <NOM_DU_DÉPÔT>
-
-Créer et activer un environnement virtuel :
-python3 -m venv myenv
-source myenv/bin/activate  # Sur Windows utilisez `myenv\Scripts\activate`
-
-Installer les dépendances :
-pip install -r requirements.txt
-
-Appliquer les migrations :
-python manage.py migrate
-
-Démarrer le serveur Django :
-python manage.py runserver
-
-Accéder à l'application :
-Ouvrez votre navigateur et allez à l'adresse http://127.0.0.1:8000/ pour accéder à l'application.
 
 
 
