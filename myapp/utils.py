@@ -43,7 +43,7 @@ def generate_summary_supervised(text):
     Returns:
         Le résumé généré.
     """
-    summary = summarizer(text, max_length=150, min_length=40, do_sample=False)
+    summary = summarizer(text, max_length=500, min_length=100, do_sample=False)
     return summary[0]['summary_text']
 
 def generate_summary_unsupervised(text, top_n=5):
